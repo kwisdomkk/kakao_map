@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import { coursePage, introducePage, joinPage, loginPage, mainPage, qrPage } from "./controller/webController.js";
+import { coursePage, introducePage, joinPage, loginPage, mainPage, qrPage, userPage } from "./controller/webController.js";
 import db from "./config/db.js";
 import { getCourseList, qrCheck } from "./controller/courseController.js";
 import { joinUser, loginUser } from "./controller/authController.js";
@@ -38,6 +38,7 @@ app.get("/course", coursePage);
 app.get("/login", loginPage);
 app.get("/join", joinPage);
 app.get("/qr", qrPage);
+app.get("/users", userPage);
 
 // api 라우터
 app.get("/api/course", notNeededAuth, getCourseList);
