@@ -1,8 +1,10 @@
 import "dotenv/config";
 import express from "express";
-import { coursePage, introducePage, mainPage } from "./controller/webController.js";
+import { coursePage, introducePage, joinPage, loginPage, mainPage, qrPage } from "./controller/webController.js";
 import db from "./config/db.js";
-import { getCourseList } from "./controller/courseController.js";
+import { getCourseList, qrCheck } from "./controller/courseController.js";
+import { joinUser, loginUser } from "./controller/authController.js";
+import { neededAuth, notNeededAuth } from "./middleware/auth.js";
 
 const app = express();
 const PORT = 8000;
@@ -33,8 +35,15 @@ const middleware = (req, res, next) => {
 app.get("/", mainPage);
 app.get("/introduce", introducePage);
 app.get("/course", coursePage);
+app.get("/login", loginPage);
+app.get("/join", joinPage);
+app.get("/qr", qrPage);
+
 // api 라우터
-app.get("/api/course", getCourseList);
+app.get("/api/course", notNeededAuth, getCourseList);
+app.post("/api/course", neededAuth, qrCheck); //로그인 안하면 접근 불가
+app.post("/api/join", joinUser);
+app.post("/api/login", loginUser);
 
 // app.post("/test", async (req, res) => {
 //   const data = req.body;
