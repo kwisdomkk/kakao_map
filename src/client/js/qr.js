@@ -44,27 +44,12 @@ function startScan() {
   let canvasElement = document.getElementById("canvas");
   let canvas = canvasElement.getContext("2d");
 
-  function drawRoundedLine(begin, end, color, radius) {
-    var angle = Math.atan2(end.y - begin.y, end.x - begin.x); // 두 점 사이의 각도 계산
-  
-    // 선의 시작과 끝 점을 원의 반지름만큼 이동
-    var offsetX = radius * Math.cos(angle);
-    var offsetY = radius * Math.sin(angle);
-  
-    var newBegin = {x: begin.x + offsetX, y: begin.y + offsetY};
-    var newEnd = {x: end.x - offsetX, y: end.y - offsetY};
-  
+  // QR 코드 테두리를 그리는 함수
+  function drawLine(begin, end, color) {
     canvas.beginPath();
-    canvas.moveTo(newBegin.x, newBegin.y);
-    canvas.lineTo(newEnd.x, newEnd.y);
+    canvas.moveTo(begin.x, begin.y);
+    canvas.lineTo(end.x, end.y);
     canvas.lineWidth = 4;
-    canvas.strokeStyle = color;
-    canvas.stroke();
-  
-    // 각 끝에 반원 그리기
-    canvas.beginPath();
-    canvas.arc(begin.x, begin.y, radius, angle - Math.PI / 2, angle + Math.PI / 2);
-    canvas.arc(end.x, end.y, radius, angle + Math.PI / 2, angle + 1.5 * Math.PI);
     canvas.strokeStyle = color;
     canvas.stroke();
   }
@@ -107,12 +92,10 @@ function startScan() {
       // QR 코드를 찾은 경우
       if (code) {
         // QR 코드 주변에 테두리를 그립니다.
-        var cornerRadius = 10; // 코너의 반지름 설정
-        drawRoundedLine(code.location.topLeftCorner, code.location.topRightCorner, "#981A4A", cornerRadius);
-        drawRoundedLine(code.location.topRightCorner, code.location.bottomRightCorner, "#981A4A", cornerRadius);
-        drawRoundedLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#981A4A", cornerRadius);
-        drawRoundedLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#981A4A", cornerRadius);
-      
+        drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF0000");
+        drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF0000");
+        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF0000");
+        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF0000");
 
         // QR 코드에 저장된 데이터를 사용하여 어떤 작업을 수행합니다.
         return courseCheckFetch(code.data);
